@@ -1,0 +1,41 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://cosn_db_1_user:AY3m2zdh7HChKLiEvekQlJfSPoOiQ7I0@dpg-ce0i0i1a6gdsa61gvjv0-a.frankfurt-postgres.render.com/cosn_db_1"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Student {
+  id              Int      @id @default(autoincrement())
+  name            String
+  age             Int
+  gender          String   @db.VarChar(1)
+  adress          String   @db.VarChar(255)
+  birthDate       DateTime
+  email           String   @unique @db.VarChar(255)
+  civilStatus     String   @db.VarChar(1)
+  ccNumber        String   @unique
+  nifNumber       String   @unique
+  degreeStateId   Int[]
+  courseEditionId Int[]
+  createdAt       DateTime @default(now())
+}
+
+model DegreeState {
+  id        Int    @id @default(autoincrement())
+  studentId Int
+  degreeId  String
+  state     String @default("0") @db.VarChar(1)
+}
+
+model DegreeId {
+  id       Int    @id @default(autoincrement())
+  degreeId String @unique
+}
+
+model CourseEditionId {
+  id              Int @id @default(autoincrement())
+  courseEditionId Int @unique
+}

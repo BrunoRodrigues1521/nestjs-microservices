@@ -1,0 +1,45 @@
+version: "3.8"
+networks:
+    cosn-g01-network:
+
+services:
+  api-gateway:
+    image: api-gateway
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    volumes:
+      - ./api-gateway:/var/app
+    ports:
+      - "3000:3000"
+    networks:
+      - cosn-g01-network
+  students-microservice:
+    image: students-microservice
+    build:
+      context: ./students
+      dockerfile: Dockerfile
+    volumes:
+      - ./students:/var/app
+    networks:
+      - cosn-g01-network
+  academic-record-microservice:
+    image: academic-record-microservice
+    build:
+      context: ./academic-records
+      dockerfile: Dockerfile
+    volumes:
+      - ./academic-records:/var/app
+    networks:
+      - cosn-g01-network
+  audit-logs-microservice:
+    image: audit-logs-microservice
+    build:
+      context: ./audit-logs
+      dockerfile: Dockerfile
+    volumes:
+      - ./audit-logs:/var/app
+    networks:
+      - cosn-g01-network
+  
+    

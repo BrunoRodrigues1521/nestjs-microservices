@@ -1,0 +1,740 @@
+openapi: 3.0.0
+info:
+  description: |
+    This is a spec regarding the students/academicRecords microservices.  You can find
+    out more about Swagger at
+    [http://swagger.io](http://swagger.io) or on
+    [irc.freenode.net, #swagger](http://swagger.io/irc/).
+  version: "1.0.0"
+  title: Students/AcademicRecords API
+  termsOfService: 'http://swagger.io/terms/'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/BrunoRodrigues1999/COSN-GROUP01/1.0.0
+tags:
+  - name: studentService
+    description: Operations about students
+  - name: studentCourseService
+    description: Operations about student courses
+  - name: examService
+    description: Operations about exams
+  - name: academicRecordService
+    description: Operations about academic records
+paths:
+  /students:
+    post:
+      tags:
+        - studentService
+      summary: Add a new student
+      description: It registers the information of a non-existent student in the database
+      operationId: studentRegister
+      requestBody:
+        $ref: '#/components/requestBodies/Student'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags:
+        - studentService
+      summary: Update an existing student
+      description: It updates the information of an existing student in the database
+      operationId: studentUpdate
+      requestBody:
+        $ref: '#/components/requestBodies/Student'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      
+    get:
+      tags:
+        - studentService
+      summary: Get all students
+      description: Gets information about all the registered students in the database
+      operationId: getAllStudents
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    delete:
+      tags:
+        - studentService
+      summary: Delete all students
+      description: Deletes all the students in the database
+      operationId: deleteStudent
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /student/{studentId}/degrees:
+    get:
+      tags:
+        - studentService
+      summary: Get the degrees of a student
+      description: Gets the information on the degree that the student is associated with
+      operationId: getDegreeByStudentId
+      parameters:
+        - name: studentId
+          in: path
+          description: ID of student to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Degree'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /student/degree:
+    post:
+      tags:
+        - studentService
+      summary: Start a degree for a student
+      description: Sends the request for degree of a student to be put as initiated in the information of the student.
+      operationId: startDegree
+      requestBody:
+        $ref: '#/components/requestBodies/StudentDegree'
+      responses:
+        '200':
+          $ref: '#/components/responses/StudentDegree'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags:
+        - studentService
+      summary: Freeze a degree for a student
+      description: Sends the request for degree of a student to be put in stasis and as such all records are saved but can't be acted upon
+      operationId: freezeEnrollment
+      requestBody:
+        $ref: '#/components/requestBodies/StudentDegree'
+      responses:
+        '200':
+          $ref: '#/components/responses/StudentDegree'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /student/course:
+    post:
+      tags:
+        - studentCourseService
+      summary: Enroll a student in a course
+      description: Sends the request for the student to be associated with a certain course edition
+      operationId: enrollCourseEdition
+      requestBody:
+        $ref: '#/components/requestBodies/StudentCourse'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /student/{studentId}/degree/{degreeId}:
+    delete:
+      tags:
+        - studentService
+      summary: Deletes a student's enrollment in a degree
+      description: Sends the request for the student to stop being associated with a certain degree
+      operationId: quitDegree
+      parameters:
+        - name: studentId
+          in: path
+          description: Student id to delete
+          required: true
+          schema:
+            type: string
+        - name: degreeId
+          in: path
+          description: Degree id to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /academicRecord/{studentId}/certificates:
+    get:
+      tags:
+        - academicRecordService
+      summary: Get the student's Academic Record information
+      description: Get the student's Academic Record information
+      operationId: getStudentCertificates
+      parameters:
+        - name: studentId
+          in: path
+          description: ID of student to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /academicRecord/certificate/:
+    post:
+      tags:
+        - academicRecordService
+      summary: Create a certificate
+      description: Create a certificate
+      operationId: createStudentCertificate
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCertificate'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /academicRecord/{studentId}/courseEdition/{courseEditionId}:
+    get:
+      tags:
+        - academicRecordService
+      summary: Get academic record of a student
+      description: Get academic record of a student
+      operationId: getAcademicResults
+      parameters:
+        - name: studentId
+          in: path
+          description: Student id
+          required: true
+          schema:
+            type: string
+        - name: courseEditionId
+          in: path
+          description: Course edition id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/GradeByStudent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /academicRecord/courseEdition/{courseEditionId}:
+    get:
+      tags:
+        - academicRecordService
+      summary: Get all academic records of a course edition
+      description: Get all academic records of a course edition
+      operationId: getStudentResults
+      parameters:
+        - name: courseEditionId
+          in: path
+          description: Course edition id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/GradeAllStudents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /exam:
+    post:
+      tags:
+        - examService
+      summary: Associates the user with a specific appeal exam call
+      description: Associates the user with a specific appeal exam call (Second call, improvement, special, etc)
+      operationId: createAppealEnroll
+      requestBody:
+        $ref: '#/components/requestBodies/CreateExamAppeal'
+      responses:
+        '200':
+          $ref: '#/components/responses/Success'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /grades/{studentId}:
+    get:
+      tags:
+        - gradeService
+      summary: Get all grades of a student
+      description: Get all grades of a student
+      operationId: getGradesByStudent
+      parameters:
+        - name: studentId
+          in: path
+          description: Student id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/GradeByStudent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  
+  /exam/academicRecord/{studentId}:
+    get:
+      tags:
+        - examService
+      summary: Get all exams of a student
+      description: Get all exams of a student
+      operationId: getStudentExams
+      parameters:
+        - name: studentId
+          in: path
+          description: Student id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          $ref: '#/components/responses/ExamByStudent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The student's id
+        name:
+          type: string
+          description: The student's name
+        age:
+          type: integer
+          description: The student's age
+        gender:
+          type: string
+          description: The student's gender
+        adress:
+          type: string
+          description: The student's adress
+        birthDate:
+          type: string
+          description: The student's birthDate
+        email:
+          type: string
+          description: The student's email
+        civilStatus:
+          type: string
+          description: The student's civil
+        ccNumber:
+          type: string
+          description: The student's ccNumber
+        nif:
+          type: string
+          description: The student's nif
+        nationality:
+          type: string
+          description: The student's nationality
+
+    AcademicRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The academicRecord's id
+        finalGrade:
+          type: integer
+          description: The academicRecord's finalGrade
+        examGrade:
+          type: number
+          description: The academicRecord's examGrade
+        classGrade:
+          type: number
+          description: The academicRecord's classGrade
+    
+    Degree:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The degree's id
+        name:
+          type: string
+          description: The degree's name
+        acronym:
+          type: string
+          description: The degree's acronym
+        year:
+          type: integer
+          description: The degree's year
+        semester:
+          type: integer
+          description: The degree's semester
+        ects:
+          type: integer
+          description: The degree's ects
+        course:
+          type: string
+          description: The degree's course
+        degreeType:
+          type: string
+          description: The degree's degreeType
+    Course:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The course's id
+        name:
+          type: string
+          description: The course's name
+        acronym:
+          type: string
+          description: The course's acronym
+        year:
+          type: integer
+          description: The course's year
+        semester:
+          type: integer
+          description: The course's semester
+        ects:
+          type: integer
+          description: The course's ects
+        courseType:
+          type: string
+          description: The course's courseType
+        degree:
+          type: string
+          description: The course's degree
+        academicRecord:
+          type: string
+          description: The course's academicRecord
+
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The certificate's id
+        studentName:
+          type: string
+          description: The certificate's studentName
+        degree:
+          type: string
+          description: The certificate's degree
+        conclusionYear:
+          type: integer
+          description: The certificate's conclusionYear
+        conclusionAverage:
+          type: number
+          description: The certificate's conclusionAverage
+    
+    Exam:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The exam's id
+        date:
+          type: string
+          description: The exam's date
+        type:
+          type: string
+          description: The exam's type
+        grade:
+          type: number
+          description: The exam's grade
+    
+    Grade:
+      type: object
+      properties:
+        value:
+          type: number
+          description: The grade's value
+
+  requestBodies:
+    CreateCertificate:
+      description: Certificate object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              studentId:
+                type: number
+                description: The student's id
+              degreeId:
+                type: string
+                description: The degree's id
+              facultyId:
+                type: number
+                description: The faculty's id
+
+    Student:
+      description: Student object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Student'
+      required: true
+      
+    AcademicRecord:
+      description: AcademicRecord object
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AcademicRecord'
+      required: true
+
+    StudentDegree:
+      description: StudentDegree object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              studentId:
+                type: string
+                description: The student's id
+              degreeId:
+                type: string
+                description: The degree's id
+      required: true
+
+    StudentCourse:
+      description: StudentCourse object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              studentId:
+                type: string
+                description: The student's id
+              courseId:
+                type: string
+                description: The course's id
+      required: true
+    
+    CreateExamAppeal:
+      description: ExamAppeal object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              studentId:
+                type: string
+                description: The student's id
+              courseEditionId:
+                type: string
+                description: The courseEdition's id
+              enrollmentType:
+                type: string
+                description: The enrollmentType
+      required: true
+  
+  responses:
+    StudentDegree:
+      description: StudentDegree response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                student:
+                  $ref: '#/components/schemas/Student'
+                degree:
+                  $ref: '#/components/schemas/Degree'
+    
+    ExamAppeal:
+      description: ExamAppeal response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                student:
+                  $ref: '#/components/schemas/Student'
+                course:
+                  $ref: '#/components/schemas/Course'
+                academicRecord:
+                  $ref: '#/components/schemas/AcademicRecord'
+    
+    GradeAllStudents:
+      description: Grade response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              properties:
+                student:
+                  $ref: '#/components/schemas/Student'
+                value:
+                  $ref: '#/components/schemas/Grade'
+
+    GradeByStudent:
+      description: Grade response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              properties:
+                course:
+                  $ref: '#/components/schemas/Course'
+                value:
+                  $ref: '#/components/schemas/Grade'
+
+    ExamByStudent:
+      description: Exam response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: The student's id
+              courseEditionId:
+                type: string
+                description: The courseEdition's id
+              phase:
+                type: string
+                description: The phase
+              date:
+                type: string
+                description: The date
+              examGrade:
+                type: number
+                description: The examGrade
+    
+    Success:
+      description: Success response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                status:
+                  type: integer
+                  description: The status of the request
+                message:
+                  type: string
+                  description: The message of the request
+          example:
+            status: 200
+            message: Success
+    
+    Unauthorized:
+      description: Unauthorized response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                status:
+                  type: integer
+                  description: The status of the request
+                message:
+                  type: string
+                  description: The message of the request
+          example:
+            status: 401
+            message: Unauthorized
+    
+    NotFound:
+      description: NotFound response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                status:
+                  type: integer
+                  description: The status of the request
+                message:
+                  type: string
+                  description: The message of the request
+          example:
+            status: 404
+            message: Not Found
+    
+    BadRequest:
+      description: BadRequest response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+                status:
+                  type: integer
+                  description: The status of the request
+                message:
+                  type: string
+                  description: The message of the request
+          example:
+            status: 400
+            message: Bad Request

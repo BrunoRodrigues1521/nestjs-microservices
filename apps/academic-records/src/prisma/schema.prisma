@@ -1,0 +1,43 @@
+datasource db {
+  provider = "postgresql"
+  url      = "postgres://cosn_db_2_user:rhWlrOScMXhO6Qb3g4N89NoCEYbtPAgn@dpg-ce34t6un6mpjvou3vca0-a.frankfurt-postgres.render.com/cosn_db_2"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AcademicRecord {
+  id              Int   @id @default(autoincrement())
+  finalGrade      Int
+  classGrade      Float
+  courseEditionId Int
+  studentId       Int
+  examId          Int[]
+  certificateId   Int[]
+  institutionId   Int[]
+}
+
+model Exam {
+  id              Int        @id @default(autoincrement())
+  courseEditionId Int
+  phase           AppealType @default(FIRST_APPEAL)
+  date            DateTime
+  examGrade       Float
+}
+
+enum AppealType {
+  FIRST_APPEAL
+  SECOND_APPEAL
+  SPECIAL_APPEAL
+}
+
+model Certificate {
+  id              Int      @id @default(autoincrement())
+  name            String
+  courseYear      Int
+  degreeName      String
+  institutionName String
+  createdAt       DateTime @default(now())
+  expirationDate  DateTime @default(dbgenerated("CURRENT_TIMESTAMP + INTERVAL '2 year'"))
+}

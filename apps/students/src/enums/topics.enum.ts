@@ -1,0 +1,25 @@
+enum Topics {
+  AUDIT_LOGS_GET = 'audit_logs.get',
+  STUDENT_HEALTH_CHECK = 'student.healthCheck',
+  STUDENT_GET = 'student.get',
+  STUDENT_CREATED = 'student.created',
+  NOTIFY_ACADEMIC_RECORDS = 'notify.academic_records',
+  STUDENT_START_DEGREE = 'student.startDegree',
+  STUDENT_FREEZE_ENROLLMENT = 'degree.freezeEnrollment',
+  STUDENT_QUIT_DEGREE = 'degree.quitDegree',
+  STUDENT_GET_DEGREES = 'student.getDegrees',
+  DEGREE = 'degree',
+  DEGREE_CREATED = 'degree.created',
+  DEGREE_ARCHIVED = 'degree.archived',
+  STUDENT_ENROLL_COURSE_EDITION = 'student.enroll.courseEdition',
+  ADD_COURSE_EDITION_TOPIC = 'add_course_edition_id',
+  DELETE_COURSE_EDITION_TOPIC = 'delete_course_edition_id',
+  CREATE_APPEAL_ENROLLMENT = 'appeal.created',
+  STUDENT_CREATE = 'student.create',
+  ADD_STUDENT_ID_TOPIC = 'add_student_id',
+  STUDENT_DELETE = 'student.delete',
+  DELETE_STUDENT_ID_TOPIC = 'delete_student_id',
+  STUDENT_UPDATE = 'student.update',
+}
+
+export default Topics;
